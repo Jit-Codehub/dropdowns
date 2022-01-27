@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Form-Assignment</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+	
+	<div class="container">
+		<form method="POST" action="{% url 'save_data' %}" id="form">
+			<h1>Dependent Dropdowns</h1>
+				{% csrf_token %}
+			<div id="form-control">	
+			  <label>Country</label>
+			  <select name="countries" id="countries" required>
+				  <option>---select country---</option>
+				  {% for i in countries %}
+				<option value="{{i.id}}">{{i.name}}</option>
+				{% endfor %}
+			  </select>
+			  <label>State</label>
+			  <select name="state" id="state" required></select>
+			  <label>District</label>
+			  <select name="district" id="district" required></select>
+			  <label>City</label>
+			  <select name="city" id="city" required></select>
+			  <input type="submit" value="Submit">
+			  <a href="{% url 'data' %}"><button type="button">Show Current Data</button></a>
+			</div>
+		</form>
+	</div>
+	
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script>
+			$("#countries").change(function () {
+				var countryId = $(this).val();
+	
+				  $.ajax({                       
+					url: "http://127.0.0.1:8000/states/",                    							
+					data: {
+					  'country': countryId      
+					},
+					success: function (data) {   
+						  $("#state").html(data); 
+					}
+				  });
+	
+			});
+	
+			$("#state").change(function () {
+				var stateId = $(this).val();
+	
+				  $.ajax({                       
+					url: "http://127.0.0.1:8000/districts/",                    							
+					data: {
+					  'state': stateId      
+					},
+					success: function (data) {   
+						  $("#district").html(data); 
+					}
+				  });
+	
+			});
+	
+			$("#district").change(function () {
+				var districtId = $(this).val();
+	
+				  $.ajax({                       
+					url: "http://127.0.0.1:8000/cities/",                    							
+					data: {
+					  'city': districtId      
+					},
+					success: function (data) {   
+						  $("#city").html(data); 
+					}
+				  });
+	
+			});
+	
+	
+		</script>
+	
+</body>
+</html>
+
+
+
+
